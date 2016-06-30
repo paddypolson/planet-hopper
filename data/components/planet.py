@@ -167,17 +167,32 @@ class Planet(pg.sprite.Sprite):
         self.inventory[self.resource] += self.num_colonists
 
     def consume(self):
-        hunger = RESOURCES["Food"]
-        eaten = self.num_colonists * hunger
-        food = self.inventory["Food"]
-        if food >= eaten:
-            self.inventory["Food"] -= eaten
-        else:
-            portions = int(food / float(hunger))
-            dead = self.num_colonists - portions
-            self.num_colonists = portions
-            self.inventory["Food"]    
-       
-        
+        """
+        The planet consumes the resources for the colonists to survive and work.
+        Running out of food will cause the hungry colonists to die from hunger
+        Currently that is the only negative effect
+        :return:
+        """
+        for key, value in RESOURCES.items():
+            # Iterate through all the resources and reduce the inventory by the amount consumed
+            consumed = self.num_colonists * value
+            inv = self.inventory[key]
+
+            if inv < consumed:
+                # Not enough resources for consumption
+
+                if key == "Food":
+                    # If not enough food for all colonists, the hungry ones will die :(
+                    portions = int(inv / value)
+                    self.num_colonists = portions
+
+                else:
+                    # The inventory is empty for this resource
+                    self.inventory[key] = 0
+
+            else:
+                # Good to remove the consumed goods
+                self.inventory[key] -= consumed
+
     def draw(self, surface):
         surface.blit(self.image, self.rect)
