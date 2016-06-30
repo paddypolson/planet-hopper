@@ -1,6 +1,5 @@
 
-RESOURCES = {
-        #name: consumption
+RESOURCES = {# name: consumption
         "Food": .15,
         "Uranium": .1,
         "Plastic": .1,
